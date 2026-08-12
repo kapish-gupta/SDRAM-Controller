@@ -1,0 +1,36 @@
+
+State Machine - |top|sdram_controller:sdram_inst|state
+Name state.SELF_REFRESH_EXIT state.SELF_REFRESH_WAIT state.SELF_REFRESH_ENTRY state.AUTO_REFRESH_WAIT state.AUTO_REFRESH_CMD state.PRECHARGE_WAIT state.PRECHARGE_ALL_BANK_CMD state.PRECHARGE_ALL_BANK_power state.BANK_PRECHARGE state.WRITE_PRECHARGE state.READ_PRECHARGE state.WRITE_BANK state.READ_BANK_WAIT state.READ_BANK_CMD state.ACTIVATE_WAIT state.ACTIVATE_CMD state.IDLE state.MODE_REGISTER_SET_WAIT state.MODE_REGISTER_SET_CMD state.POWER_ON 
+state.POWER_ON 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+state.MODE_REGISTER_SET_CMD 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 
+state.MODE_REGISTER_SET_WAIT 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 
+state.IDLE 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 1 
+state.ACTIVATE_CMD 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 1 
+state.ACTIVATE_WAIT 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 
+state.READ_BANK_CMD 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 
+state.READ_BANK_WAIT 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 
+state.WRITE_BANK 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 
+state.READ_PRECHARGE 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 
+state.WRITE_PRECHARGE 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 
+state.BANK_PRECHARGE 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 
+state.PRECHARGE_ALL_BANK_power 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 
+state.PRECHARGE_ALL_BANK_CMD 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state.PRECHARGE_WAIT 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state.AUTO_REFRESH_CMD 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state.AUTO_REFRESH_WAIT 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state.SELF_REFRESH_ENTRY 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state.SELF_REFRESH_WAIT 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+state.SELF_REFRESH_EXIT 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 
+
+State Machine - |top|user_interface:ui_inst|state
+Name state.WAIT_RELEASE state.WAIT_RP state.PRECHARGE state.WAIT_CAS state.WRITE_CMD state.READ_CMD state.WAIT_RCD state.ACTIVATE state.IDLE state.RESET_WAIT 
+state.RESET_WAIT 0 0 0 0 0 0 0 0 0 0 
+state.IDLE 0 0 0 0 0 0 0 0 1 1 
+state.ACTIVATE 0 0 0 0 0 0 0 1 0 1 
+state.WAIT_RCD 0 0 0 0 0 0 1 0 0 1 
+state.READ_CMD 0 0 0 0 0 1 0 0 0 1 
+state.WRITE_CMD 0 0 0 0 1 0 0 0 0 1 
+state.WAIT_CAS 0 0 0 1 0 0 0 0 0 1 
+state.PRECHARGE 0 0 1 0 0 0 0 0 0 1 
+state.WAIT_RP 0 1 0 0 0 0 0 0 0 1 
+state.WAIT_RELEASE 1 0 0 0 0 0 0 0 0 1 

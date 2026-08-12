@@ -1,0 +1,45 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity tb_user_interface is
+end entity;
+
+architecture sim of tb_user_interface is
+    constant CLK_PERIOD : time := 10 ns; 
+    
+    signal clk        : std_logic := '0';
+    signal reset      : std_logic := '1';
+    signal read_bank  : std_logic := '0';
+    signal write_bank : std_logic := '0';
+    signal cmd_out    : std_logic_vector(3 downto 0);
+    signal cmd_valid  : std_logic;
+
+begin
+    uut: entity work.user_interface
+        generic map ( freq_clk => 100 )
+        port map (
+            clk => clk, reset => reset,
+            read_bank => read_bank, write_bank => write_bank,
+            cmd_out => cmd_out, cmd_valid => cmd_valid
+        );
+
+    clk <= not clk after CLK_PERIOD / 2;
+
+    stimulus: process
+    begin
+        wait for 50 ns;
+        reset <= '0';
+        
+        -- Wait for the initialization sequence to finish
+        -- (Make sure you lowered t200u in the RTL for this test!)
+        wait for 500 ns; 
+
+        -- Trigger a read
+        read_bank <= '1';
+        wait for CLK_PERIOD;
+        read_bank <= '0';
+
+        wait for 500 ns;
+        wait;
+    end process;
+end sim;

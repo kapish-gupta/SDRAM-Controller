@@ -1,0 +1,138 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity tb_sdram_controller is
+end entity;
+
+architecture sim of tb_sdram_controller is
+    constant CLK_PERIOD : time := 10 ns; -- 100 MHz clock
+    
+    -- Inputs
+    signal clk_user       : std_logic := '0';
+    signal DQM_user       : std_logic := '0';
+    signal reset_user     : std_logic := '1';
+    signal cmd_in_user    : std_logic_vector(3 downto 0) := "0000"; -- NOP default
+    signal addr_in_user   : std_logic_vector(11 downto 0) := (others => '0');
+    signal bank_addr_user : std_logic_vector(1 downto 0) := "00";
+    
+    -- Bidirectional (Inouts)
+    signal data_user  : std_logic_vector(15 downto 0);
+    signal data_sdram : std_logic_vector(15 downto 0);
+    
+    -- Signals to drive the inout ports from the testbench
+    signal tb_data_user_drv  : std_logic_vector(15 downto 0) := (others => 'Z');
+    signal tb_data_sdram_drv : std_logic_vector(15 downto 0) := (others => 'Z');
+
+    -- Outputs
+    signal clk_sdram        : std_logic;
+    signal DQM_sdram        : std_logic;
+    signal clk_enable_sdram : std_logic;
+    signal cs, ras, cas, we : std_logic;
+    signal addr_out_sdram   : std_logic_vector(11 downto 0);
+    signal rd_en            : std_logic;
+    signal bank_addr_sdram  : std_logic_vector(1 downto 0);
+
+begin
+    -- Instantiate the Unit Under Test (UUT)
+    uut: entity work.sdram_controller
+        generic map ( freq_clk => 100 )
+        port map (
+            clk_user         => clk_user,
+            DQM_user         => DQM_user,
+            reset_user       => reset_user,
+            cmd_in_user      => cmd_in_user,
+            addr_in_user     => addr_in_user,
+            bank_addr_user   => bank_addr_user,
+            data_user        => data_user,
+            clk_sdram        => clk_sdram,
+            DQM_sdram        => DQM_sdram,
+            clk_enable_sdram => clk_enable_sdram,
+            cs               => cs,
+            ras              => ras,
+            cas              => cas,
+            we               => we,
+            addr_out_sdram   => addr_out_sdram,
+            data_sdram       => data_sdram,
+            rd_en            => rd_en,
+            bank_addr_sdram  => bank_addr_sdram
+        );
+
+    -- Continuous assignment for tri-state buses
+    data_user  <= tb_data_user_drv;
+    data_sdram <= tb_data_sdram_drv;
+
+    -- Clock Generation
+    clk_user <= not clk_user after CLK_PERIOD / 2;
+
+    -- Stimulus Process
+    stimulus: process
+    begin
+        -- 1. Apply Reset
+        reset_user <= '1';
+        wait for 50 ns;
+        reset_user <= '0';
+        
+        -- 2. Wait for Power-Up and Initialization (200us + MRS config)
+        -- In simulation, jump to 205,000 ns to see the action start
+        wait for 205 us; 
+        
+    
+        -- 3. SIMULATE A WRITE OPERATION
+      
+        wait until rising_edge(clk_user);
+        
+        -- Send ACTIVATE Command
+        cmd_in_user <= "0111"; 
+        addr_in_user <= x"A5A"; -- Arbitrary row address
+        bank_addr_user <= "10";
+        wait for CLK_PERIOD;
+        cmd_in_user <= "0000"; -- Back to NOP
+        
+        -- Wait tRCD (approx 20ns / 2 clock cycles)
+        wait for 2 * CLK_PERIOD; 
+        
+        -- Send WRITE Command and push data on the user bus
+        cmd_in_user <= "0010";
+        addr_in_user <= x"012"; 
+        tb_data_user_drv <= x"ABCD"; -- Data to write to SDRAM
+        wait for CLK_PERIOD;
+        
+        cmd_in_user <= "0000"; -- Back to NOP
+        tb_data_user_drv <= (others => 'Z'); -- Stop driving the bus!
+        
+        wait for 50 ns; 
+        
+       
+        -- 4. SIMULATE A READ OPERATION
+     
+        wait until rising_edge(clk_user);
+        
+        -- Send ACTIVATE Command
+        cmd_in_user <= "0111"; 
+        addr_in_user <= x"B6B"; 
+        bank_addr_user <= "01";
+        wait for CLK_PERIOD;
+        cmd_in_user <= "0000";
+        
+        wait for 2 * CLK_PERIOD;
+        
+        -- Send READ Command
+        cmd_in_user <= "0001";
+        addr_in_user <= x"034";
+        wait for CLK_PERIOD;
+        cmd_in_user <= "0000";
+        
+        -- Simulate the SDRAM chip sending data back after CAS latency
+        
+        wait for CLK_PERIOD; 
+        tb_data_sdram_drv <= x"F00D"; -- Mock data coming from SDRAM
+        wait for CLK_PERIOD;
+        tb_data_sdram_drv <= (others => 'Z');
+        
+        -- Wait a bit to observe final idle state
+        wait for 100 ns;
+        
+        wait; -- Stop simulation
+    end process;
+end sim;

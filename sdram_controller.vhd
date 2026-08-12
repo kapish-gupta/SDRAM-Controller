@@ -1,0 +1,495 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity sdram_controller is
+    generic(
+        freq_clk : integer := 100  -- 1MHz - 100MHz
+    );
+    port (
+        -- user controller input 
+        clk_user        : in  std_logic;
+        DQM_user        : in  std_logic;
+        reset_user      : in  std_logic;
+        cmd_in_user     : in  std_logic_vector(3 downto 0);
+        addr_in_user    : in  std_logic_vector(11 downto 0);
+        bank_addr_user  : in  std_logic_vector(1 downto 0);
+        data_user       : inout std_logic_vector(15 downto 0);
+        
+        -- controller sdram output
+        clk_sdram       : out std_logic;
+        DQM_sdram       : out std_logic;
+        clk_enable_sdram: out std_logic;
+        cs              : out std_logic;
+        ras             : out std_logic;
+        cas             : out std_logic;
+        we              : out std_logic;
+        addr_out_sdram  : out std_logic_vector(11 downto 0);
+        data_sdram      : inout std_logic_vector(15 downto 0);
+        rd_en           : out std_logic;
+        bank_addr_sdram : out std_logic_vector(1 downto 0)
+    );
+end entity;
+
+architecture rtl of sdram_controller is
+    
+    type state_type is (
+        POWER_ON,
+        MODE_REGISTER_SET_CMD,
+        MODE_REGISTER_SET_WAIT,
+        IDLE,
+        ACTIVATE_CMD,
+        ACTIVATE_WAIT,
+        READ_BANK_CMD,
+        READ_BANK_WAIT,
+        WRITE_BANK,
+        READ_PRECHARGE,
+        WRITE_PRECHARGE,
+        BANK_PRECHARGE,
+        PRECHARGE_ALL_BANK_power,
+        PRECHARGE_ALL_BANK_CMD,
+        PRECHARGE_WAIT,
+        AUTO_REFRESH_CMD,
+        AUTO_REFRESH_WAIT,
+        SELF_REFRESH_ENTRY,
+        SELF_REFRESH_WAIT,
+        SELF_REFRESH_EXIT
+    );
+
+    signal state, state_next : state_type := IDLE;
+
+    -- CONTROL / STATUS SIGNALS
+    signal power_on_signal         : std_logic := '1';
+    signal precharge_input_stable  : std_logic := '0';
+    signal refresh_input_stable    : std_logic := '0';
+    signal self_refresh_signal     : std_logic := '0';
+    signal read_enable             : std_logic := '0';
+    signal write_enable            : std_logic := '0';
+    signal direction_data          : std_logic;   -- 0 -> read, 1-> write 
+    signal write_data_reg          : std_logic_vector(15 downto 0) := (others => '0');
+    signal read_data_reg           : std_logic_vector(15 downto 0) := (others => '0');
+    signal init_done               : std_logic := '0'; -- '0' = Power Up, '1' = Normal Operation
+    
+    -- COUNTERS
+    signal wait_counter            : integer range 0 to 65535 := 0;
+    signal stable_counter          : integer range 0 to 65535 := 0;
+    signal refresh_cnt             : integer range 0 to 9 := 0;
+    signal self_refresh_counter    : integer range 0 to 65535 := 0;
+    signal issue_refresh_powerUP   : std_logic := '0';
+    
+    -- TIMING PARAMETERS (CLK CYCLES)
+    constant t200us : integer := 200 * freq_clk;
+    constant t15us  : integer := 15  * freq_clk;
+
+    constant tRC    : integer := (65 * freq_clk) / 1000;  -- 65 ns
+    constant tRCD   : integer := (20 * freq_clk) / 1000;  -- 20 ns
+    constant tRP    : integer := (20 * freq_clk) / 1000;  -- 20 ns
+    constant tCAS   : integer := (10 * freq_clk) / 1000;  -- 10 ns
+    constant tMRD   : integer := (20 * freq_clk) / 1000;  -- 20 ns
+    constant REF_TIMER_LIMIT : integer := 15 * freq_clk;
+
+    signal refresh_timer_cnt       : integer range 0 to REF_TIMER_LIMIT := REF_TIMER_LIMIT;   -- 15 us refresh 
+    signal refresh_req             : std_logic := '0'; 
+    signal cmd_latch               : std_logic_vector(3 downto 0);
+    signal rd_pulse                : std_logic := '0';
+    
+begin
+  
+clk_sdram <= clk_user;
+
+-- Generate read pulse for FIFO when IDLE
+process(clk_user)
+begin
+    if rising_edge(clk_user) then
+        rd_pulse <= '0';
+        if (state = IDLE) and (init_done = '1') then
+            rd_pulse <= '1';  
+        end if;
+    end if;
+end process;
+
+rd_en <= rd_pulse;
+
+-- Latch command from FIFO
+process(clk_user)
+begin
+    if rising_edge(clk_user) then
+        if rd_pulse = '1' then
+            cmd_latch <= cmd_in_user;
+        end if;
+    end if;
+end process;
+ 
+-- Internal Refresh Timer
+process(clk_user, reset_user)
+begin
+    if reset_user = '1' then
+        refresh_timer_cnt <= REF_TIMER_LIMIT;
+        refresh_req       <= '0';
+        
+    elsif rising_edge(clk_user) then
+        
+        -- 1. The Count (15 us)
+        if refresh_timer_cnt > 0 then
+            refresh_timer_cnt <= refresh_timer_cnt - 1;
+        else
+            -- Time is up! 15 us passed.
+            refresh_timer_cnt <= REF_TIMER_LIMIT; -- Reset timer
+            refresh_req       <= '1';             -- Raise the flag
+        end if;
+
+        -- 2. The Handshake (Clear flag when Refresh starts)
+        if state = AUTO_REFRESH_CMD then
+            refresh_req <= '0';
+        end if;
+        
+    end if;
+end process;
+
+-- Main State Machine
+process(clk_user, reset_user)
+begin
+    if reset_user = '1' then
+        state                  <= POWER_ON;
+        stable_counter         <= t200us;
+        precharge_input_stable <= '0';
+        init_done              <= '0';
+        read_enable            <= '0';
+        write_enable           <= '0';
+        
+    elsif rising_edge(clk_user) then
+        
+        case state is
+
+            -- 200 us power-up NOP
+            when POWER_ON =>
+                if stable_counter > 0 then
+                    stable_counter <= stable_counter - 1;
+                else
+                    precharge_input_stable <= '1';   -- power up precharge
+                    state <= PRECHARGE_ALL_BANK_power;
+                end if;
+                    
+            when PRECHARGE_ALL_BANK_power =>
+                if precharge_input_stable = '1' then
+                    precharge_input_stable <= '0';
+                end if;
+                refresh_cnt <= 9;
+                wait_counter <= tRP ;
+                state <= AUTO_REFRESH_WAIT;
+
+            when AUTO_REFRESH_CMD =>
+                state <= AUTO_REFRESH_WAIT;
+                wait_counter <= tRC;
+
+            when AUTO_REFRESH_WAIT =>
+               if wait_counter > 0 then
+                  wait_counter <= wait_counter - 1;
+               else
+                 if refresh_cnt > 1 then
+                    refresh_cnt <= refresh_cnt - 1;
+                    state <= AUTO_REFRESH_CMD;
+                 else
+                     if init_done = '0' then   
+                        state <= MODE_REGISTER_SET_CMD;  -- If we are in Power-Up Mode, go to MRS
+                     else   
+                         state <= IDLE;                  -- If we are in Normal Mode, go back to IDLE
+                     end if;
+                 end if;
+               end if;
+
+            when MODE_REGISTER_SET_CMD =>
+                wait_counter <= tMRD;
+                state <= MODE_REGISTER_SET_WAIT;
+
+            when MODE_REGISTER_SET_WAIT =>
+                if wait_counter > 0 then
+                    wait_counter <= wait_counter - 1;
+                else
+                    state <= IDLE;
+                    init_done <= '1'; -- Initialization Complete!
+                end if;
+
+            when IDLE =>
+                if init_done = '1' then
+                    if refresh_req = '1' then
+                        state        <= AUTO_REFRESH_CMD;
+                        wait_counter <= tRC;
+                    else  
+                        case cmd_latch is
+                            
+                        when "0111" =>   -- ACTIVATE
+                            state <= ACTIVATE_CMD;
+                            wait_counter <= tRCD;
+
+                        when "0001" =>   -- READ
+                            wait_counter <= 2;
+                            state <= READ_BANK_CMD; 
+                            read_enable <= '1';
+                            direction_data <= '0';
+
+                        when "0010" =>   -- WRITE
+                            state <= WRITE_BANK;
+                            write_enable <= '1';
+                            direction_data <= '1';
+                            wait_counter <= 0; -- Write takes 1 cycle to latch data
+
+                        when "0011" =>   -- PRECHARGE BANK
+                            state <= BANK_PRECHARGE;
+                            wait_counter <= tRP;
+                            
+                        when "1111" =>   -- PRECHARGE ALL BANK
+                            state <= PRECHARGE_ALL_BANK_CMD;
+                            wait_counter <= tRP;
+
+                        when "0000" =>   -- NOP
+                            state <= IDLE;
+                            
+                        when "1000" =>   -- AUTO REFRESH
+                            state <= AUTO_REFRESH_CMD;
+                    
+                        when "1001" =>   -- SELF REFRESH ENTRY
+                            state <= SELF_REFRESH_ENTRY;
+                        
+                        when "1010" =>   -- SELF REFRESH EXIT
+                            state <= SELF_REFRESH_EXIT;
+                            
+                        when others =>
+                            state <= IDLE;
+                            
+                        end case;
+                    end if;
+                end if;
+                    
+            when READ_BANK_CMD =>
+                state <= READ_BANK_WAIT;
+                        
+            when READ_BANK_WAIT =>
+                if wait_counter > 0 then
+                  wait_counter <= wait_counter - 1;
+                else 
+                  state <= IDLE;
+                  read_enable <= '0';
+                end if;
+
+            when ACTIVATE_CMD =>
+                wait_counter <= tRCD;
+                state <= ACTIVATE_WAIT;
+
+            when ACTIVATE_WAIT =>
+               if wait_counter > 0 then
+                  wait_counter <= wait_counter - 1;
+               else
+                  state <= IDLE;
+               end if;
+                    
+            when WRITE_BANK  =>
+                if wait_counter > 0 then
+                    wait_counter <= wait_counter - 1;
+                else
+                    state <= IDLE;
+                    write_enable <= '0';
+                end if;
+                    
+            when PRECHARGE_ALL_BANK_CMD =>
+                wait_counter <= tRCD;
+                state <=  PRECHARGE_WAIT;
+                    
+            when BANK_PRECHARGE =>
+                wait_counter <= tRCD;
+                state <=  PRECHARGE_WAIT;
+                    
+            when PRECHARGE_WAIT => 
+                if wait_counter > 0 then
+                    wait_counter <= wait_counter - 1;
+                else
+                    state <= IDLE;
+                end if;
+                
+            when SELF_REFRESH_ENTRY =>
+                state <= SELF_REFRESH_WAIT;      
+                
+            when SELF_REFRESH_WAIT =>                                      
+                if cmd_in_user = "1010" then
+                     state <= SELF_REFRESH_EXIT;        
+                     wait_counter <= tRC;               
+                else
+                     state <= SELF_REFRESH_WAIT;
+                end if;
+
+            when SELF_REFRESH_EXIT =>
+                if wait_counter > 0 then
+                    wait_counter <= wait_counter - 1;
+                else
+                    state <= IDLE;
+                end if;
+                
+            when others =>
+                state <= IDLE;
+
+        end case;
+    end if;
+end process;
+
+
+-- Data Capture Process (Reset added to clear U states)
+process(clk_user, reset_user)
+begin
+    if reset_user = '1' then
+        write_data_reg <= (others => '0');
+        read_data_reg  <= (others => '0');
+    elsif rising_edge(clk_user) then
+
+        -- Capture write data immediately when WRITE command is observed
+        if (state = IDLE) and (cmd_latch = "0010" or cmd_in_user = "0010") then
+             write_data_reg <= data_user;
+        end if;
+
+        -- Capture read data from SDRAM 
+        if (wait_counter = 1) and (state = READ_BANK_WAIT) then 
+             read_data_reg <= data_sdram;
+        end if;
+        
+    end if;
+end process;
+
+
+-- Tri-state Bus Control
+process(state, write_data_reg, read_data_reg, wait_counter)
+begin
+    -- Default: release buses
+    data_sdram <= (others => 'Z');
+    data_user  <= (others => 'Z');
+
+    -- WRITE: FPGA -> SDRAM
+    if state = WRITE_BANK then
+        data_sdram <= write_data_reg;
+    end if;
+
+    -- READ: FPGA -> USER
+    if (state = READ_BANK_WAIT) and (wait_counter = 0) then
+        data_user <= read_data_reg;
+    end if;
+end process;
+
+
+-- Output Pin Control
+process(state, addr_in_user, bank_addr_user, DQM_user)
+begin
+    -- DEFAULT OUTPUTS (Prevents Latches and 'U' states)
+    cs               <= '0';
+    ras              <= '1';
+    cas              <= '1';
+    we               <= '1';
+    clk_enable_sdram <= '1';
+    DQM_sdram        <= DQM_user;
+    addr_out_sdram   <= (others => '0');
+    bank_addr_sdram  <= (others => '0');
+    
+    case state is 
+
+        when POWER_ON =>
+            null;
+            
+        when PRECHARGE_ALL_BANK_power =>
+            cs  <= '0';
+            ras <= '0';
+            cas <= '1';
+            we  <= '0';
+            addr_out_sdram(10) <= '1';   -- AP = 1 (ALL banks)
+
+        when PRECHARGE_ALL_BANK_CMD =>
+            cs  <= '0';
+            ras <= '0';
+            cas <= '1';
+            we  <= '0';
+            addr_out_sdram(10) <= '1'; 
+                
+        when AUTO_REFRESH_CMD =>
+            cs  <= '0';
+            ras <= '0';
+            cas <= '0';
+            we  <= '1';
+            
+        when MODE_REGISTER_SET_CMD =>       
+            cs  <= '0';
+            ras <= '0';                                                                                             
+            cas <= '0';                                                                                                             
+            we  <= '0';                                                                                                                                                                                                                                                     
+            -- A11 A10 A9 A8 A7 A6 A5 A4 A3 A2 A1 A0
+            -- 0   0   0  0  0  0   1  1  0  0  0  0
+            addr_out_sdram <= "000000110000";                                                                                                   
+            
+        when IDLE => 
+            cs  <= '0';
+            ras <= '1';
+            cas <= '1';
+            we  <= '1';
+            
+        when BANK_PRECHARGE =>
+            cs  <= '0';
+            ras <= '0';
+            cas <= '1';
+            we  <= '0';
+            addr_out_sdram(10) <= '0';
+            bank_addr_sdram <= bank_addr_user;
+
+        when ACTIVATE_CMD =>
+            cs  <= '0';
+            ras <= '0';
+            cas <= '1';
+            we  <= '1';
+            bank_addr_sdram <= bank_addr_user;
+            addr_out_sdram  <= addr_in_user;
+            
+        when READ_BANK_CMD => 
+            -- Removing read_enable dependency to ensure pins drive cleanly
+            cs  <= '0';
+            ras <= '1';
+            cas <= '0';
+            we  <= '1';
+            addr_out_sdram(10) <= '0';
+            bank_addr_sdram <= bank_addr_user;
+            addr_out_sdram  <= addr_in_user;
+        
+        when WRITE_BANK => 
+            -- Removing write_enable dependency to ensure pins drive cleanly
+            cs  <= '0';
+            ras <= '1';
+            cas <= '0';
+            we  <= '0';
+            addr_out_sdram(10) <= '0';
+            bank_addr_sdram <= bank_addr_user;
+            addr_out_sdram  <= addr_in_user;
+
+        -- ENTRY: Send Refresh Command + Turn off CKE
+        when SELF_REFRESH_ENTRY =>
+            cs  <= '0';
+            ras <= '0';
+            cas <= '0';
+            we  <= '1';
+            clk_enable_sdram <= '0'; -- CKE LOW
+
+        -- WAIT: Send NOPs + Keep CKE Low
+        when SELF_REFRESH_WAIT =>
+            cs  <= '0'; -- NOP 
+            ras <= '1';
+            cas <= '1';
+            we  <= '1';
+            clk_enable_sdram <= '0'; -- CKE LOW
+            
+        -- EXIT: Send NOPs + Turn CKE Back High
+        when SELF_REFRESH_EXIT =>
+            cs  <= '0'; -- NOP
+            ras <= '1';
+            cas <= '1';
+            we  <= '1';
+            clk_enable_sdram <= '1'; -- CKE HIGH 
+            
+        when others =>
+            null;
+            
+    end case;
+end process;
+    
+end rtl;

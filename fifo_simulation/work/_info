@@ -1,0 +1,98 @@
+m255
+K4
+z2
+!s11e vcom 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dD:/Quartus
+Ecmd_fifo
+Z0 w1786537855
+Z1 DPx4 ieee 11 numeric_std 0 22 aU^R8eGcicLcUFIaBQSL>3
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
+!i122 0
+Z4 dD:/prjct quartus/sdram_controller/fifo_simulation
+Z5 8D:/prjct quartus/sdram_controller/cmd_fifo.vhd
+Z6 FD:/prjct quartus/sdram_controller/cmd_fifo.vhd
+l0
+L7 1
+VTT?ah5:k2A2;a18nCN1`G3
+!s100 eZI8^T1glgNFCPNkS8aT;3
+Z7 OV;C;2020.1;71
+32
+Z8 !s110 1786538046
+!i10b 1
+Z9 !s108 1786538046.000000
+Z10 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|D:/prjct quartus/sdram_controller/cmd_fifo.vhd|
+Z11 !s107 D:/prjct quartus/sdram_controller/cmd_fifo.vhd|
+!i113 1
+Z12 o-work work -2002 -explicit
+Z13 tExplicit 1 CvgOpt 0
+Artl
+R1
+R2
+R3
+Z14 DEx4 work 8 cmd_fifo 0 22 TT?ah5:k2A2;a18nCN1`G3
+!i122 0
+l37
+L29 84
+VV;l9lBVk3U>RRCddCAaT60
+!s100 1^D`V2BlGF3?:6aeBogN31
+R7
+32
+R8
+!i10b 1
+R9
+R10
+R11
+!i113 1
+R12
+R13
+Etb_cmd_fifo
+Z15 w1786537939
+R1
+R2
+R3
+!i122 1
+R4
+Z16 8D:/prjct quartus/sdram_controller/tb_cmd_fifo.vhd
+Z17 FD:/prjct quartus/sdram_controller/tb_cmd_fifo.vhd
+l0
+L5 1
+VPPXD?96Qd[=7lAUF01[;K2
+!s100 aJi;HWZ:BFVTPBDa2=k`Y2
+R7
+32
+R8
+!i10b 1
+R9
+Z18 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|D:/prjct quartus/sdram_controller/tb_cmd_fifo.vhd|
+!s107 D:/prjct quartus/sdram_controller/tb_cmd_fifo.vhd|
+!i113 1
+R12
+R13
+Asim
+R14
+R1
+R2
+R3
+DEx4 work 11 tb_cmd_fifo 0 22 PPXD?96Qd[=7lAUF01[;K2
+!i122 1
+l20
+L8 52
+Vo5z:nU3X7bWX958Hl;5`A1
+!s100 oUMfaW;eYBk:Necl`lbCK2
+R7
+32
+R8
+!i10b 1
+R9
+R18
+Z19 !s107 D:/prjct quartus/sdram_controller/tb_cmd_fifo.vhd|
+!i113 1
+R12
+R13

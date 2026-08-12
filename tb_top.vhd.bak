@@ -1,0 +1,79 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity tb_top is
+end entity;
+
+architecture sim of tb_top is
+    constant CLK_PERIOD : time := 10 ns;
+    
+    signal clk   : std_logic := '0';
+    signal reset : std_logic := '1';
+    
+    -- User side
+    signal read_bank          : std_logic := '0';
+    signal write_bank         : std_logic := '0';
+    signal addr_user_top      : std_logic_vector(11 downto 0) := (others => '0');
+    signal bank_addr_user_top : std_logic_vector(1 downto 0) := "00";
+    signal dqm_user           : std_logic := '0';
+    
+    -- Inouts
+    signal data_user_top  : std_logic_vector(15 downto 0);
+    signal data_sdram_top : std_logic_vector(15 downto 0);
+    
+    -- SDRAM side outputs
+    signal cs, ras, cas, we : std_logic;
+    signal addr_sdram_top   : std_logic_vector(11 downto 0);
+    signal bank_addr_sdram_top : std_logic_vector(1 downto 0);
+    signal clk_enable       : std_logic;
+    signal dqm_sdram        : std_logic;
+    signal clk_sdram_top    : std_logic;
+
+begin
+    uut: entity work.top
+        port map (
+            clk => clk, 
+				reset => reset,
+            read_bank => read_bank, 
+				write_bank => write_bank,
+            cs => cs, 
+				ras => ras, 
+				cas => cas, 
+				we => we,
+            addr_sdram_top => addr_sdram_top, 
+				addr_user_top => addr_user_top,
+            bank_addr_sdram_top => bank_addr_sdram_top, 
+				bank_addr_user_top => bank_addr_user_top,
+            clk_enable => clk_enable, 
+				dqm_sdram => dqm_sdram, 
+				dqm_user => dqm_user,
+            data_user_top => data_user_top, 
+				data_sdram_top => data_sdram_top,
+            clk_sdram_top => clk_sdram_top
+        );
+
+    clk <= not clk after CLK_PERIOD / 2;
+
+    -- Pull-ups for inout buses in simulation to avoid 'U' states
+    data_user_top  <= (others => 'H');
+    data_sdram_top <= (others => 'H');
+
+    stimulus: process
+    begin
+        wait for 100 ns;
+        reset <= '0';
+        
+        -- Again, ensure your t200us constant is drastically reduced for simulation
+        wait for 2000 ns; 
+
+        -- Setup a write command
+        addr_user_top <= x"0A5";
+        bank_addr_user_top <= "10";
+        write_bank <= '1';
+        wait for CLK_PERIOD;
+        write_bank <= '0';
+        
+        wait for 1000 ns;
+        wait;
+    end process;
+end sim;

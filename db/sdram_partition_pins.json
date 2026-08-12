@@ -1,0 +1,285 @@
+{
+	"partitions" : [
+		{
+			"name" : "Top",
+			"pins" : [
+				{
+					"name" : "ras",
+					"strict" : false
+				},
+				{
+					"name" : "cas",
+					"strict" : false
+				},
+				{
+					"name" : "we",
+					"strict" : false
+				},
+				{
+					"name" : "addr_sdram_top[0]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_sdram_top[1]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_sdram_top[2]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_sdram_top[3]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_sdram_top[4]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_sdram_top[5]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_sdram_top[6]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_sdram_top[7]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_sdram_top[8]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_sdram_top[9]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_sdram_top[10]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_sdram_top[11]",
+					"strict" : false
+				},
+				{
+					"name" : "bank_addr_sdram_top[0]",
+					"strict" : false
+				},
+				{
+					"name" : "bank_addr_sdram_top[1]",
+					"strict" : false
+				},
+				{
+					"name" : "clk_enable",
+					"strict" : false
+				},
+				{
+					"name" : "clk_sdram_top",
+					"strict" : false
+				},
+				{
+					"name" : "data_user_top[0]",
+					"strict" : false
+				},
+				{
+					"name" : "data_user_top[1]",
+					"strict" : false
+				},
+				{
+					"name" : "data_user_top[2]",
+					"strict" : false
+				},
+				{
+					"name" : "data_user_top[3]",
+					"strict" : false
+				},
+				{
+					"name" : "data_user_top[4]",
+					"strict" : false
+				},
+				{
+					"name" : "data_user_top[5]",
+					"strict" : false
+				},
+				{
+					"name" : "data_user_top[6]",
+					"strict" : false
+				},
+				{
+					"name" : "data_user_top[7]",
+					"strict" : false
+				},
+				{
+					"name" : "data_user_top[8]",
+					"strict" : false
+				},
+				{
+					"name" : "data_user_top[9]",
+					"strict" : false
+				},
+				{
+					"name" : "data_user_top[10]",
+					"strict" : false
+				},
+				{
+					"name" : "data_user_top[11]",
+					"strict" : false
+				},
+				{
+					"name" : "data_user_top[12]",
+					"strict" : false
+				},
+				{
+					"name" : "data_user_top[13]",
+					"strict" : false
+				},
+				{
+					"name" : "data_user_top[14]",
+					"strict" : false
+				},
+				{
+					"name" : "data_user_top[15]",
+					"strict" : false
+				},
+				{
+					"name" : "data_sdram_top[0]",
+					"strict" : false
+				},
+				{
+					"name" : "data_sdram_top[1]",
+					"strict" : false
+				},
+				{
+					"name" : "data_sdram_top[2]",
+					"strict" : false
+				},
+				{
+					"name" : "data_sdram_top[3]",
+					"strict" : false
+				},
+				{
+					"name" : "data_sdram_top[4]",
+					"strict" : false
+				},
+				{
+					"name" : "data_sdram_top[5]",
+					"strict" : false
+				},
+				{
+					"name" : "data_sdram_top[6]",
+					"strict" : false
+				},
+				{
+					"name" : "data_sdram_top[7]",
+					"strict" : false
+				},
+				{
+					"name" : "data_sdram_top[8]",
+					"strict" : false
+				},
+				{
+					"name" : "data_sdram_top[9]",
+					"strict" : false
+				},
+				{
+					"name" : "data_sdram_top[10]",
+					"strict" : false
+				},
+				{
+					"name" : "data_sdram_top[11]",
+					"strict" : false
+				},
+				{
+					"name" : "data_sdram_top[12]",
+					"strict" : false
+				},
+				{
+					"name" : "data_sdram_top[13]",
+					"strict" : false
+				},
+				{
+					"name" : "data_sdram_top[14]",
+					"strict" : false
+				},
+				{
+					"name" : "data_sdram_top[15]",
+					"strict" : false
+				},
+				{
+					"name" : "clk",
+					"strict" : false
+				},
+				{
+					"name" : "reset",
+					"strict" : false
+				},
+				{
+					"name" : "addr_user_top[0]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_user_top[1]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_user_top[2]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_user_top[3]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_user_top[4]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_user_top[5]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_user_top[6]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_user_top[7]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_user_top[8]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_user_top[9]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_user_top[10]",
+					"strict" : false
+				},
+				{
+					"name" : "addr_user_top[11]",
+					"strict" : false
+				},
+				{
+					"name" : "bank_addr_user_top[0]",
+					"strict" : false
+				},
+				{
+					"name" : "bank_addr_user_top[1]",
+					"strict" : false
+				},
+				{
+					"name" : "read_bank",
+					"strict" : false
+				},
+				{
+					"name" : "write_bank",
+					"strict" : false
+				}
+			]
+		}
+	]
+}

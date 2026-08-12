@@ -1,0 +1,142 @@
+m255
+K4
+z2
+!s11e vcom 2020.1 2020.02, Feb 28 2020
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dD:/Quartus
+Esdram_controller
+Z0 w1786537806
+Z1 DPx4 ieee 11 numeric_std 0 22 aU^R8eGcicLcUFIaBQSL>3
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
+!i122 28
+Z4 dD:/prjct quartus/sdram_controller/sdram_controller_simulation
+Z5 8D:/prjct quartus/sdram_controller/sdram_controller.vhd
+Z6 FD:/prjct quartus/sdram_controller/sdram_controller.vhd
+l0
+L6 1
+V=;Y3_z=7RFB>kOaPAocfh2
+!s100 <WCSK[1NWGWkg;njZn]m^1
+Z7 OV;C;2020.1;71
+32
+Z8 !s110 1786542346
+!i10b 1
+Z9 !s108 1786542346.000000
+Z10 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|D:/prjct quartus/sdram_controller/sdram_controller.vhd|
+Z11 !s107 D:/prjct quartus/sdram_controller/sdram_controller.vhd|
+!i113 1
+Z12 o-work work -2002 -explicit
+Z13 tExplicit 1 CvgOpt 0
+Artl
+R1
+R2
+R3
+Z14 DEx4 work 16 sdram_controller 0 22 =;Y3_z=7RFB>kOaPAocfh2
+!i122 28
+l116
+L38 488
+VgV?ETH:5Ye2M?dff<M7ea0
+!s100 TA>gg:WSWgITlbR5<nDLK3
+R7
+32
+R8
+!i10b 1
+R9
+R10
+R11
+!i113 1
+R12
+R13
+Etb_sdram_controller
+Z15 w1786540017
+R1
+R2
+R3
+!i122 1
+R4
+Z16 8D:/prjct quartus/sdram_controller/tb_sdram_controller.vhd
+Z17 FD:/prjct quartus/sdram_controller/tb_sdram_controller.vhd
+l0
+L5 1
+V2SJWD9?0SR;Tf@E3J[2km1
+!s100 GCS_9JOa`@YIYIFDn>YPR2
+R7
+32
+Z18 !s110 1786540131
+!i10b 1
+Z19 !s108 1786540131.000000
+Z20 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|D:/prjct quartus/sdram_controller/tb_sdram_controller.vhd|
+Z21 !s107 D:/prjct quartus/sdram_controller/tb_sdram_controller.vhd|
+!i113 1
+R12
+R13
+Asim
+R14
+R1
+R2
+R3
+DEx4 work 19 tb_sdram_controller 0 22 2SJWD9?0SR;Tf@E3J[2km1
+!i122 1
+l36
+L8 131
+VoSX:YCkPO?CL_K@>DYQZ=3
+!s100 ^CFDElJCkmCJf@BzY:dS=0
+R7
+32
+R18
+!i10b 1
+R19
+R20
+R21
+!i113 1
+R12
+R13
+Etb_sdram_full_features
+Z22 w1786542340
+R1
+R2
+R3
+!i122 29
+R4
+R16
+R17
+l0
+L5 1
+V0`dA]ieImmWE7iHQ5bn@?3
+!s100 Sch<KLY9aRUEm<KbYIg:B1
+R7
+32
+R8
+!i10b 1
+R9
+R20
+R21
+!i113 1
+R12
+R13
+Asim
+R14
+R1
+R2
+R3
+Z23 DEx4 work 22 tb_sdram_full_features 0 22 0`dA]ieImmWE7iHQ5bn@?3
+!i122 29
+l36
+L8 185
+VHC^z@TTEVnlKn]gJ^WnOj1
+!s100 @PH3>a3lzzHJXF;;8eQaH2
+R7
+32
+R8
+!i10b 1
+R9
+R20
+R21
+!i113 1
+R12
+R13

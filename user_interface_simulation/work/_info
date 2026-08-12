@@ -1,0 +1,97 @@
+m255
+K4
+z2
+!s11e MIXED_VERSIONS
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dD:/Quartus
+Etb_user_interface
+Z0 w1786539248
+Z1 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z2 DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
+!i122 4
+Z3 dD:/prjct quartus/sdram_controller/user_interface_simulation
+Z4 8D:/prjct quartus/sdram_controller/tb_user_interface.vhd
+Z5 FD:/prjct quartus/sdram_controller/tb_user_interface.vhd
+l0
+L4 1
+VO2z<FC1memRm:Hei@1R@Z1
+!s100 h[S5SW6RQhH[c^I4>WWh83
+Z6 OV;C;2020.1;71
+32
+Z7 !s110 1786539255
+!i10b 1
+Z8 !s108 1786539255.000000
+Z9 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|D:/prjct quartus/sdram_controller/tb_user_interface.vhd|
+Z10 !s107 D:/prjct quartus/sdram_controller/tb_user_interface.vhd|
+!i113 1
+Z11 o-work work -2002 -explicit
+Z12 tExplicit 1 CvgOpt 0
+Asim
+Z13 DPx4 ieee 11 numeric_std 0 22 aU^R8eGcicLcUFIaBQSL>3
+Z14 DEx4 work 14 user_interface 0 22 XbOW97Qz<DWeikdh3hj3`0
+R1
+R2
+DEx4 work 17 tb_user_interface 0 22 O2z<FC1memRm:Hei@1R@Z1
+!i122 4
+l17
+L7 61
+VGUV^?Okl<gk]EJB`JOm7Y1
+!s100 H4aDO8;0b7EYU0<fSOoH50
+R6
+32
+R7
+!i10b 1
+R8
+R9
+R10
+!i113 1
+R11
+R12
+Euser_interface
+Z15 w1786537881
+R13
+R1
+R2
+!i122 5
+R3
+Z16 8D:/prjct quartus/sdram_controller/user_interface.vhd
+Z17 FD:/prjct quartus/sdram_controller/user_interface.vhd
+l0
+L5 1
+VXbOW97Qz<DWeikdh3hj3`0
+!s100 DVD7j^n[LBTH1=Dlo0L?H3
+R6
+32
+R7
+!i10b 1
+R8
+Z18 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|D:/prjct quartus/sdram_controller/user_interface.vhd|
+Z19 !s107 D:/prjct quartus/sdram_controller/user_interface.vhd|
+!i113 1
+R11
+R12
+Artl
+R13
+R1
+R2
+R14
+!i122 5
+l53
+Z20 L21 145
+Z21 V?j8dWamG@8e=L9hRFWBHW0
+Z22 !s100 d8j`7lSMVPBeWnDn:oMPz3
+R6
+32
+R7
+!i10b 1
+R8
+R18
+R19
+!i113 1
+R11
+R12

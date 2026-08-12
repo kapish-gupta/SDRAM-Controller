@@ -1,0 +1,273 @@
+m255
+K4
+z2
+!s11e MIXED_VERSIONS
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dD:/Quartus
+Ecmd_fifo
+Z0 w1786537855
+Z1 DPx4 ieee 11 numeric_std 0 22 aU^R8eGcicLcUFIaBQSL>3
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 cVAk:aDinOX8^VGI1ekP<3
+!i122 67
+Z4 dD:/prjct quartus/sdram_controller/top_module_simulation
+Z5 8D:/prjct quartus/sdram_controller/cmd_fifo.vhd
+Z6 FD:/prjct quartus/sdram_controller/cmd_fifo.vhd
+l0
+L7 1
+VTT?ah5:k2A2;a18nCN1`G3
+!s100 eZI8^T1glgNFCPNkS8aT;3
+Z7 OV;C;2020.1;71
+32
+Z8 !s110 1786544204
+!i10b 1
+Z9 !s108 1786544204.000000
+Z10 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|D:/prjct quartus/sdram_controller/cmd_fifo.vhd|
+Z11 !s107 D:/prjct quartus/sdram_controller/cmd_fifo.vhd|
+!i113 1
+Z12 o-work work -2002 -explicit
+Z13 tExplicit 1 CvgOpt 0
+Artl
+R1
+R2
+R3
+Z14 DEx4 work 8 cmd_fifo 0 22 TT?ah5:k2A2;a18nCN1`G3
+!i122 67
+l37
+L29 84
+VV;l9lBVk3U>RRCddCAaT60
+!s100 1^D`V2BlGF3?:6aeBogN31
+R7
+32
+R8
+!i10b 1
+R9
+R10
+R11
+!i113 1
+R12
+R13
+Esdram_controller
+Z15 w1786543393
+R1
+R2
+R3
+!i122 68
+R4
+Z16 8D:/prjct quartus/sdram_controller/sdram_controller.vhd
+Z17 FD:/prjct quartus/sdram_controller/sdram_controller.vhd
+l0
+L5 1
+VYIGa_Ag=c5k2U2ii5G5<n3
+!s100 <`=5UR7I>7i3Jc`2A9[]I1
+R7
+32
+R8
+!i10b 1
+R9
+Z18 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|D:/prjct quartus/sdram_controller/sdram_controller.vhd|
+Z19 !s107 D:/prjct quartus/sdram_controller/sdram_controller.vhd|
+!i113 1
+R12
+R13
+Artl
+R1
+R2
+R3
+Z20 DEx4 work 16 sdram_controller 0 22 YIGa_Ag=c5k2U2ii5G5<n3
+!i122 68
+l96
+L34 462
+V]CanTgbi>XWa7O`>;j5kf0
+!s100 IlPAMUTL=5agdo1Sidh;N2
+R7
+32
+R8
+!i10b 1
+R9
+R18
+R19
+!i113 1
+R12
+R13
+Etb_top
+Z21 w1786539831
+R2
+R3
+!i122 25
+R4
+Z22 8D:/prjct quartus/sdram_controller/tb_top.vhd
+Z23 FD:/prjct quartus/sdram_controller/tb_top.vhd
+l0
+L4 1
+ViXCjbd3UX7`hbaOkh[aZ_1
+!s100 X;kj>NOJn0T9SehLj1ZPc1
+R7
+32
+Z24 !s110 1786542585
+!i10b 1
+Z25 !s108 1786542585.000000
+Z26 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|D:/prjct quartus/sdram_controller/tb_top.vhd|
+Z27 !s107 D:/prjct quartus/sdram_controller/tb_top.vhd|
+!i113 1
+R12
+R13
+Asim
+R1
+Z28 DEx4 work 3 top 0 22 >4^jBg2a7H^Vm23C_Qenb3
+R2
+R3
+DEx4 work 6 tb_top 0 22 iXCjbd3UX7`hbaOkh[aZ_1
+!i122 25
+l32
+L7 73
+V4TRZD@[dfLO977@dAWS>]2
+!s100 1nIjGj_4kkD8XgmQo2Wgg1
+R7
+32
+R24
+!i10b 1
+R25
+R26
+R27
+!i113 1
+R12
+R13
+Etb_top_full
+Z29 w1786544187
+R1
+R2
+R3
+!i122 65
+R4
+R22
+R23
+l0
+L5 1
+V76[z>??S34khkBhQ2>WeK1
+!s100 Mh8^fD9M7b:9G9OHbOLnd3
+R7
+32
+R8
+!i10b 1
+Z30 !s108 1786544203.000000
+R26
+R27
+!i113 1
+R12
+R13
+Asim
+R28
+R1
+R2
+R3
+DEx4 work 11 tb_top_full 0 22 76[z>??S34khkBhQ2>WeK1
+!i122 65
+l33
+L8 134
+VP6okChLDVnJ3Y3dXhMKo:0
+!s100 34jlG67:NKT6coMQEAg<10
+R7
+32
+R8
+!i10b 1
+R30
+R26
+R27
+!i113 1
+R12
+R13
+Etop
+Z31 w1786537770
+R1
+R2
+R3
+!i122 66
+R4
+Z32 8D:/prjct quartus/sdram_controller/top.vhd
+Z33 FD:/prjct quartus/sdram_controller/top.vhd
+l0
+L5 1
+V>4^jBg2a7H^Vm23C_Qenb3
+!s100 cG<N_f5>Z]>?Fk>`A28EP1
+R7
+32
+R8
+!i10b 1
+R9
+Z34 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|D:/prjct quartus/sdram_controller/top.vhd|
+Z35 !s107 D:/prjct quartus/sdram_controller/top.vhd|
+!i113 1
+R12
+R13
+Artl
+R20
+Z36 DEx4 work 14 user_interface 0 22 XbOW97Qz<DWeikdh3hj3`0
+R14
+R1
+R2
+R3
+R28
+!i122 66
+l49
+L38 72
+VhW2monk2gJYO>P`z_2O9h2
+!s100 Bg2>_5a<6BTA^cGIa1c;l1
+R7
+32
+R8
+!i10b 1
+R9
+R34
+R35
+!i113 1
+R12
+R13
+Euser_interface
+Z37 w1786537881
+R1
+R2
+R3
+!i122 69
+R4
+Z38 8D:/prjct quartus/sdram_controller/user_interface.vhd
+Z39 FD:/prjct quartus/sdram_controller/user_interface.vhd
+l0
+L5 1
+VXbOW97Qz<DWeikdh3hj3`0
+!s100 DVD7j^n[LBTH1=Dlo0L?H3
+R7
+32
+R8
+!i10b 1
+R9
+Z40 !s90 -reportprogress|300|-work|work|-2002|-explicit|-stats=none|D:/prjct quartus/sdram_controller/user_interface.vhd|
+Z41 !s107 D:/prjct quartus/sdram_controller/user_interface.vhd|
+!i113 1
+R12
+R13
+Artl
+R1
+R2
+R3
+R36
+!i122 69
+l53
+Z42 L21 145
+Z43 V?j8dWamG@8e=L9hRFWBHW0
+Z44 !s100 d8j`7lSMVPBeWnDn:oMPz3
+R7
+32
+R8
+!i10b 1
+R9
+R40
+R41
+!i113 1
+R12
+R13
